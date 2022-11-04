@@ -2,13 +2,38 @@ import Graficos
 import time
 import random
 
+vidas = 3 #Numero de vidas que tiene el jugadar para completar el laberinto
+puntaje = 0 #Puntaje inical del juego
+
 window = Graficos.InicializarVentana()
 pacman = Graficos.CrearActorPacman()
-Graficos.ControlCommands()
-pen = Graficos.InicializarHUD()
+pen = Graficos.InicializarHUD(vidas,puntaje)
 dots = Graficos.InicializarComida()
 lines = Graficos.InicializarMapa()
-
+'''
+########################################################################################################################################
+Enlazar la actualizacion de coordenadas con la informacion mostrada en pantalla
+########################################################################################################################################
+'''    
+def MovimientoArriba():
+    pacman.direction = 'up'
+def MovimientoAbajo():
+    pacman.direction = 'down'
+def MovimientoIz():
+    pacman.direction = 'left'
+def MovimientoDer():
+    pacman.direction = 'right'
+'''
+########################################################################################################################################
+Configurar entrada por eventos (Entrada por buffer del teclado)
+########################################################################################################################################
+''' 
+window.listen()
+window.onkeypress(MovimientoArriba,'w')   
+window.onkeypress(MovimientoAbajo,'s')
+window.onkeypress(MovimientoIz,'a')
+window.onkeypress(MovimientoDer,'d')
+    
 #Main (Loop para que el juego funcione)
 while True:
     window.update()

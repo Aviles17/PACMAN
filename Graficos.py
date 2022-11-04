@@ -106,32 +106,6 @@ def movement(pacman): #Funcion para el movimiento de pacman
         pacman.setx(x)
         pacman.sety(y)
         time.sleep(0.01)
-        
-        
-'''
-########################################################################################################################################
-Enlazar la actualizacion de coordenadas con la informacion mostrada en pantalla
-########################################################################################################################################
-'''    
-def MovimientoArriba(pacman):
-    pacman.direction = 'up'
-def MovimientoAbajo(pacman):
-    pacman.direction = 'down'
-def MovimientoIz(pacman):
-    pacman.direction = 'left'
-def MovimientoDer(pacman):
-    pacman.direction = 'right'
-'''
-########################################################################################################################################
-Configurar entrada por eventos (Entrada por buffer del teclado)
-########################################################################################################################################
-''' 
-def ControlCommands(window):
-    window.listen()
-    window.onkeypress(MovimientoArriba,'w')   
-    window.onkeypress(MovimientoAbajo,'s')
-    window.onkeypress(MovimientoIz,'a')
-    window.onkeypress(MovimientoDer,'d')
 '''
 ########################################################################################################################################
 Inicailizacion de las pepitas dentro del mapa de pacman
@@ -157,9 +131,7 @@ def InicializarComida():
 Inicailizacion del puntaje y vidas del jugador
 ########################################################################################################################################
 ''' 
-def InicializarHUD():
-    vidas = 3 #Numero de vidas que tiene el jugadar para completar el laberinto
-    puntaje = 0 #Puntaje inical del juego
+def InicializarHUD(vidas,puntaje):
 
     pen = turtle.Turtle()
     pen.speed(0)
