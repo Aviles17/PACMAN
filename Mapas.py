@@ -1,4 +1,8 @@
-
+'''
+########################################################################################################################################
+Ester archivo tiene como proposito el probar generacion de mapa, no influye en la ejecucion de Pacman.py
+########################################################################################################################################
+'''
 import turtle
 from freegames import line
 import numpy as np
@@ -18,43 +22,53 @@ window.setup(600,600)
 Rutina de codigo para inicializar el laberinto en pantalla
 ########################################################################################################################################
 '''
-map = np.array([[1,1,1,1,1,1,1,1,1,1],
-               [2,0,0,0,0,0,0,0,0,2],
-               [2,0,0,0,0,0,0,0,0,2],
-               [2,0,0,0,0,0,0,0,0,2],
-               [2,0,0,0,0,0,0,0,0,2],
-               [2,0,0,0,0,0,0,0,0,2],
-               [2,0,0,0,0,0,0,0,0,2],
-               [2,0,0,0,0,0,0,0,0,2],
-               [2,0,0,0,0,0,0,0,0,2],
-               [1,1,1,1,1,1,1,1,1,1]])
+map = np.array([[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]])
 lines = []
-InicialX = -260
+InicialX = -270
 InicialY = 280
-for i in range(10):
-    for j in range(10):
-        if(map[i][j] == 1): #Se dibuja una linea horizontal
-            p1 = (InicialX,InicialY)
-            p2 = (InicialX + 56*(j),InicialY)
+for i in range(20):
+    for j in range(20):
+        if(map[i][j] == 1): #Generar lineas horizontales
             Limit = turtle.Turtle()
             Limit.speed(0)
-            Limit.penup()
+            Limit.shape("square")
             Limit.color('blue')
-            Limit.goto(p1)
+            Limit.penup()
+            Limit.goto(InicialX + 28*(j),InicialY)
             Limit.pendown()
-            Limit.goto(p2)
-            Limit.hideturtle()
+            Limit.shapesize(stretch_len= 2.3, stretch_wid= 0.5)
             lines.append(Limit)
-        if(map[i][j] == 2): #Se dibuja una linea horizontal
-            x = (InicialX+ 56*(j),InicialY + 56*(i))
-            y = (InicialX+ 56*(j),InicialY - 56*(i))
+        if(map[i][j] == 2): #Generar lineas verticales
             Limit = turtle.Turtle()
             Limit.speed(0)
-            Limit.penup()
+            Limit.shape("square")
             Limit.color('blue')
-            Limit.goto(x)
+            Limit.penup()
+            Limit.goto(InicialX + 28*(j),InicialY)
             Limit.pendown()
-            Limit.goto(y)
-            Limit.hideturtle()
-            lines.append(Limit)
-    InicialY -= 56
+            Limit.shapesize(stretch_len= 0.5, stretch_wid= 2.3)
+            lines.append(Limit)    
+    InicialY -= 28 #Pasar a la siguiente linea 
+        
+while True:
+    window.update()
+
