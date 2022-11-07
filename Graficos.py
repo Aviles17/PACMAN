@@ -22,47 +22,52 @@ Rutina de codigo para inicializar el laberinto en pantalla
 ########################################################################################################################################
 '''
 def InicializarMapa():
-      
-    map = np.array([[1,1,1,1,1,1,1,1,1,1],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [2,0,0,0,0,0,0,0,0,2],
-                    [1,1,1,1,1,1,1,1,1,1]])
+    map = np.array([[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]])
     lines = []
-    InicialX = -260
+    InicialX = -270
     InicialY = 280
-    for i in range(10):
-        for j in range(10):
-            if(map[i][j] == 1): #Se dibuja una linea horizontal
-                p1 = (InicialX,InicialY)
-                p2 = (InicialX + 56*(j),InicialY)
+    for i in range(20):
+        for j in range(20):
+            if(map[i][j] == 1): #Generar lineas horizontales
                 Limit = turtle.Turtle()
                 Limit.speed(0)
-                Limit.penup()
+                Limit.shape("square")
                 Limit.color('blue')
-                Limit.goto(p1)
+                Limit.penup()
+                Limit.goto(InicialX + 28*(j),InicialY)
                 Limit.pendown()
-                Limit.goto(p2)
-                #Limit.hideturtle()
+                Limit.shapesize(stretch_len= 2.3, stretch_wid= 0.5)
                 lines.append(Limit)
-            if(map[i][j] == 2): #Se dibuja una linea horizontal
-                x = (InicialX+ 56*(j),InicialY + 56*(i))
-                y = (InicialX+ 56*(j),InicialY - 56*(i))
+            if(map[i][j] == 2): #Generar lineas verticales
                 Limit = turtle.Turtle()
                 Limit.speed(0)
-                Limit.penup()
+                Limit.shape("square")
                 Limit.color('blue')
-                Limit.goto(x)
+                Limit.penup()
+                Limit.goto(InicialX + 28*(j),InicialY)
                 Limit.pendown()
-                Limit.goto(y)
-                #Limit.hideturtle()
-                lines.append(Limit)
-        InicialY -= 56
+                Limit.shapesize(stretch_len= 0.5, stretch_wid= 2.3)
+                lines.append(Limit)    
+        InicialY -= 28 #Pasar a la siguiente linea 
     return lines
 
 '''
@@ -86,27 +91,42 @@ Funcion de codigo para actualizar las coordenadas de Pacman
 def movement(pacman): #Funcion para el movimiento de pacman
     if pacman.direction == 'up':
         y = pacman.ycor() #Obtener la coordenada 'y' de pacman
-        y = y + 0.55 #Generar un movimiento en la coordenada
+        y = y + 1 #Generar un movimiento en la coordenada
         pacman.sety(y)
     if pacman.direction == 'down':
         y = pacman.ycor() 
-        y = y - 0.55 #Generar un movimiento en la coorden
+        y = y - 1 #Generar un movimiento en la coorden
         pacman.sety(y)
     if pacman.direction == 'left': 
         x = pacman.xcor() #Obtener la coordenada 'x' de pacman
-        x = x - 0.55
+        x = x - 1
         pacman.setx(x)
     if pacman.direction == 'right':
         x = pacman.xcor()
-        x = x + 0.55
+        x = x + 1
         pacman.setx(x)
-    if pacman.direction == 'Halt':
+    #Ajustes de movimiento ligeros para colisiones
+    if pacman.direction == 'ColDer':
         x = pacman.xcor()
         y = pacman.ycor()
+        x = x - 0.5
         pacman.setx(x)
-        pacman.sety(y)
-        time.sleep(0.01)
-'''
+    if pacman.direction == 'ColIz':
+        x = pacman.xcor()
+        y = pacman.ycor()
+        x = x + 0.5
+        pacman.setx(x)
+    if pacman.direction == 'ColUp':
+        x = pacman.xcor()
+        y = pacman.ycor()
+        y = y - 0.5
+        pacman.setx(x)
+    if pacman.direction == 'ColDown':
+        x = pacman.xcor()
+        y = pacman.ycor()
+        y = y + 0.5
+        pacman.setx(x)
+''' 
 ########################################################################################################################################
 Inicailizacion de las pepitas dentro del mapa de pacman
 ########################################################################################################################################
@@ -137,7 +157,7 @@ def InicializarHUD(vidas,puntaje):
     pen.speed(0)
     pen.color("grey")
     pen.penup()
-    pen.goto(0,-275)
+    pen.goto(0,-293)
     pen.pendown()
     pen.write('Score: {}  Lives: {}'.format(puntaje,vidas),align='center',font=('Courier',20))
     pen.hideturtle()

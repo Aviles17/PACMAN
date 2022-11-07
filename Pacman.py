@@ -33,23 +33,22 @@ window.onkeypress(MovimientoArriba,'w')
 window.onkeypress(MovimientoAbajo,'s')
 window.onkeypress(MovimientoIz,'a')
 window.onkeypress(MovimientoDer,'d')
-    
 #Main (Loop para que el juego funcione)
 while True:
     window.update()
     #Colisiones con el borde o limites del mapa
     if(pacman.xcor() > 300):
         pacman.goto(-298,pacman.ycor())
-        Graficos.MovimientoDer(pacman)
+        MovimientoDer()
     if(pacman.xcor() < -300):
         pacman.goto(298,pacman.ycor())
-        Graficos.MovimientoIz(pacman)
+        MovimientoIz()
     if(pacman.ycor() < -300):
         pacman.goto(pacman.xcor(),298)
-        Graficos.MovimientoAbajo(pacman)
+        MovimientoAbajo()
     if(pacman.ycor() > 300):
         pacman.goto(pacman.xcor(),-298)
-        Graficos.MovimientoArriba(pacman)
+        MovimientoArriba()
     
     #Revisar vidas y respawn en el caso de ser 0
     if(vidas==0):
@@ -73,6 +72,14 @@ while True:
     #Colision con los limites del mapa
     for l in lines:
         if pacman.distance(l) < 15:
-            pacman.direction = 'Halt'
+            #Diferentes acercamientos, diferente comportamiento de colision
+            if(pacman.direction == 'right'):
+                pacman.direction = 'ColDer'
+            if(pacman.direction == 'left'):
+                pacman.direction = 'ColIz'
+            if(pacman.direction == 'up'):
+                pacman.direction = 'ColUp'
+            if(pacman.direction == 'down'):
+                pacman.direction = 'ColDown'
     
     Graficos.movement(pacman)
