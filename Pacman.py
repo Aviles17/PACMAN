@@ -1,6 +1,7 @@
 import Graficos
 import time
 import random
+import Mapas
 
 vidas = 3 #Numero de vidas que tiene el jugadar para completar el laberinto
 puntaje = 0 #Puntaje inical del juego
@@ -9,7 +10,7 @@ window = Graficos.InicializarVentana()
 pacman = Graficos.CrearActorPacman()
 pen = Graficos.InicializarHUD(vidas,puntaje)
 dots = Graficos.InicializarComida()
-lines = Graficos.InicializarMapa()
+lines = Mapas.GenerarMapa('E',True)
 '''
 ########################################################################################################################################
 Enlazar la actualizacion de coordenadas con la informacion mostrada en pantalla
