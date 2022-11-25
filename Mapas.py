@@ -1,7 +1,8 @@
 import turtle
 import numpy as np
 import Algoritmos
-import threading, sys, os
+import sys
+import time
 def GenerarMapa(opcion):
     if(opcion == 'B'):
         #Mapa Basico (Cuadrado)
@@ -100,7 +101,7 @@ def GenerarMapa(opcion):
 Rutina para generar el grafo dirigido
 ########################################################################################################################################
 '''
-def GenerarGrafo(map):
+def GenerarGrafo(map,Modo_Juego):
     Mat_Grafo = np.empty((20,20),int)
     for i in range(20):
         for j in range(20):
@@ -119,12 +120,14 @@ def GenerarGrafo(map):
     Mat_Grafo = Auxiliar_Grafo(Mat_Grafo,Nodo) 
     Mat_Grafo, Num_Nodos = ReEnumerarEstruct(Mat_Grafo)
     Relaciones = GenerarMatrizRelaciones(Mat_Grafo,Num_Nodos)
-    Recorrido_Dij = Algoritmos.Dijkstra_Algorithm(Relaciones,1,11)
-    Recorrido_Manhattan = Algoritmos.Manhattan_Euristic_Algorithm(Relaciones,Mat_Grafo,1,11)
-    Recorrido_Cart = Algoritmos.Transformacion_Cartesiana(Recorrido_Dij,Mat_Grafo)
-    print(Recorrido_Dij)
-    print(Recorrido_Manhattan)
-    return Recorrido_Cart
+    Ori,Dest = pedirOriDes(Num_Nodos)
+    if(Modo_Juego == 'd'):
+        Recorrido_Dij, Time = Algoritmos.Dijkstra_Algorithm(Relaciones,Ori,Dest)
+        Recorrido_Cart = Algoritmos.Transformacion_Cartesiana(Recorrido_Dij,Mat_Grafo)
+    if(Modo_Juego == 'm'):
+        Recorrido_Manhattan, Time = Algoritmos.Manhattan_Euristic_Algorithm(Relaciones,Mat_Grafo,Ori,Dest)
+        Recorrido_Cart = Algoritmos.Transformacion_Cartesiana(Recorrido_Manhattan,Mat_Grafo)
+    return Recorrido_Cart, Time
 '''
 ########################################################################################################################################
 Rutina para auxiliar la funcion del grafo para asi completar los nodos 
@@ -240,5 +243,31 @@ def GenerarMatrizRelaciones(Matriz_Map, NumNodos):
             Contador += 1
     return Relaciones        
                 
+'''
+########################################################################################################################################
+Rutina para pedir nodos a los cuales se les aplicara algoritmos
+########################################################################################################################################
+'''
+def pedirOriDes(NumNodos):
+    Ori = 0
+    Dest = 0
+    while(Ori <= 0 or Ori > NumNodos):
+        print("Indique el nodo del cual iniciar el recorrido, existen 1 al " + str(NumNodos) + " nodos posibles :\n")
+        Ori = input("Ingrese un numero entre esos valores :\n")
+        Ori = int(Ori)
+        if(Ori <= 0 or Ori > NumNodos):
+            time.sleep(0.5)
+            print("El nodo seleccionado no esta en rango")
+    print("\n")
+    while(Dest <= 0 or Dest > NumNodos):
+        print("Indique el nodo con el cual quiere finalizar el recorrido, existen 1 al " + str(NumNodos) + " nodos posibles :\n")
+        Dest = input("Ingrese un numero entre esos valores :\n")
+        Dest = int(Dest)
+        if(Dest <= 0 or Dest > NumNodos):
+            time.sleep(0.5)
+            print("El nodo seleccionado no esta en rango")
+    time.sleep(1)
+    return Ori,Dest
+        
 
     

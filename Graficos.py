@@ -17,9 +17,18 @@ def InicializarVentana():
 Rutina de codigo para inicializar una pantalla con un circulo amarillo (Pacman)
 ########################################################################################################################################
 '''
-def CrearActorPacman(pos_inicial):
+def CrearActorPacmanGoto(pos_inicial):
     pacman = turtle.Turtle()
     pacman.goto(pos_inicial[0],pos_inicial[1])
+    pacman.speed(0)
+    pacman.penup() 
+    pacman.color("yellow")
+    pacman.shape('circle')
+    pacman.direction = 'stop'
+    return pacman
+
+def CrearActorPacman():
+    pacman = turtle.Turtle()
     pacman.speed(0)
     pacman.penup() 
     pacman.color("yellow")

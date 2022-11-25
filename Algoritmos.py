@@ -1,7 +1,9 @@
 import numpy as np
 from scipy.spatial.distance import cityblock
+import time 
 
 def Dijkstra_Algorithm(Matriz_Rela,Ori,Dest):
+    Start_time = time.time()
     Recorrido = [Ori]
     Costo_Total = 0
     Canti_Nodos = len(Matriz_Rela[0])
@@ -40,8 +42,8 @@ def Dijkstra_Algorithm(Matriz_Rela,Ori,Dest):
             Ori = Nodo
         else:
             break
-    print(Costo_Total)        
-    return Recorrido
+    Time_Dj = time.time() - Start_time      
+    return Recorrido, Time_Dj
 
 def Transformacion_Cartesiana(Recorrido, Mapa,Base_Reguladora = 28):
     #Crear diccionario con las diferentes coordenadas para cada nodo
@@ -66,6 +68,7 @@ def Transformacion_Cartesiana(Recorrido, Mapa,Base_Reguladora = 28):
             
     
 def Manhattan_Euristic_Algorithm(Matriz_Rela,Mapa,Ori,Dest,Base_Reguladora = 28):
+    Start_time = time.time()
     #Guardar por nodo sus coordenadas cartesianas
     Coordenadas_Nodo = {}
     InicialX = -270
@@ -123,8 +126,8 @@ def Manhattan_Euristic_Algorithm(Matriz_Rela,Mapa,Ori,Dest,Base_Reguladora = 28)
             Ori = Nodo
         else:
             break
-        
-    return Recorrido
+    Time_Man = time.time() - Start_time     
+    return Recorrido, Time_Man
     
     
     
