@@ -2,15 +2,20 @@ import Graficos
 import time
 import random
 import Mapas
-
+'''
+########################################################################################################################################
+Establecer piezas de mapa y retribucion de graficos por partes del archivo Graficos.py
+########################################################################################################################################
+'''    
 vidas = 3 #Numero de vidas que tiene el jugadar para completar el laberinto
 puntaje = 0 #Puntaje inical del juego
 
 window = Graficos.InicializarVentana()
-pacman = Graficos.CrearActorPacman()
+lines, map = Mapas.GenerarMapa('E')
+Recorrido_Cart = Mapas.GenerarGrafo(map)
+pacman = Graficos.CrearActorPacman(Recorrido_Cart[0])
 pen = Graficos.InicializarHUD(vidas,puntaje)
-dots = Graficos.InicializarComida()
-lines = Mapas.GenerarMapa('E',True)
+#dots = Graficos.InicializarComida()
 '''
 ########################################################################################################################################
 Enlazar la actualizacion de coordenadas con la informacion mostrada en pantalla
@@ -61,17 +66,17 @@ while True:
         pacman.goto(0,0)
         
     #Comida y la colision con pacman
-    for dot in dots:
+    '''for dot in dots:
         if pacman.distance(dot) < 10:
             puntaje += 1
             pen.clear()
             pen.write('Score: {}  Lives: {}'.format(puntaje,vidas),align='center',font=('Courier',20))
             x = random.randint(-245,230)
             y = random.randint(-190,250)
-            dot.goto(x,y)
+            dot.goto(x,y)'''
             
     #Colision con los limites del mapa
-    for l in lines:
+    '''for l in lines:
         if pacman.distance(l) < 15:
             #Diferentes acercamientos, diferente comportamiento de colision
             if(pacman.direction == 'right'):
@@ -81,6 +86,28 @@ while True:
             if(pacman.direction == 'up'):
                 pacman.direction = 'ColUp'
             if(pacman.direction == 'down'):
-                pacman.direction = 'ColDown'
-    
+                pacman.direction = 'ColDown'''
+    #IA guiada por Algoritmo de Dijkstra
+    Contador = 0
+    while(pacman.distance(Recorrido_Cart[len(Recorrido_Cart)-1][0],Recorrido_Cart[len(Recorrido_Cart)-1][1]) > 15):
+        window.update()
+        X1 = Recorrido_Cart[Contador][0]
+        X2 = Recorrido_Cart[Contador+1][0]
+        Y1 = Recorrido_Cart[Contador][1]
+        Y2 = Recorrido_Cart[Contador+1][1]
+        print(str(X1 - X2) + "|" + str(Y1 - Y2))
+        if(pacman.distance(X2,Y2) < 15):
+            Contador += 1
+        if(X1 - X2 < 0):
+            MovimientoDer()
+        if(X1 - X2 > 0):
+            MovimientoIz()
+        if(Y1 - Y2 < 0):
+            MovimientoArriba()
+        if(Y1 - Y2 > 0):
+            MovimientoAbajo()
+        if(Contador + 1 >= len(Recorrido_Cart)):
+            break
+        Graficos.movement(pacman)
+    pacman.direction = 'stop'
     Graficos.movement(pacman)

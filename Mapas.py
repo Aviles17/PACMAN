@@ -1,7 +1,8 @@
 import turtle
 import numpy as np
-
-def GenerarMapa(opcion, AI):
+import Algoritmos
+import threading, sys, os
+def GenerarMapa(opcion):
     if(opcion == 'B'):
         #Mapa Basico (Cuadrado)
         map = np.array([[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -63,7 +64,7 @@ def GenerarMapa(opcion, AI):
                         [2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
                         [2,1,0,0,0,2,0,0,0,0,0,1,1,1,1,1,1,1,1,2],
                         [2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
-                        [2,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+                        [2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
                         [2,1,0,0,0,2,1,1,1,1,1,1,0,0,2,0,0,0,0,2],
                         [2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,2],
                         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]])
@@ -93,12 +94,7 @@ def GenerarMapa(opcion, AI):
                 Limit.shapesize(stretch_len= 0.5, stretch_wid= 2.3)
                 lines.append(Limit)    
         InicialY -= 28 #Pasar a la siguiente linea 
-    
-    #llamar a generar comida con relacion al mapa
-    if(AI == True):
-        GenerarGrafo(map)
-        
-    return lines
+    return lines, map
 '''
 ########################################################################################################################################
 Rutina para generar el grafo dirigido
@@ -106,6 +102,9 @@ Rutina para generar el grafo dirigido
 '''
 def GenerarGrafo(map):
     Mat_Grafo = np.empty((20,20),int)
+    for i in range(20):
+        for j in range(20):
+            Mat_Grafo[i][j] = 0
     Nodo = 0 # Inicializar el contador de nodos
     for i in range(20):
         for j in range(20):
@@ -116,6 +115,130 @@ def GenerarGrafo(map):
                         Nodo += 1
             else:
                 Mat_Grafo[i][j] = -1
-                  
-    print(Mat_Grafo)
+                
+    Mat_Grafo = Auxiliar_Grafo(Mat_Grafo,Nodo) 
+    Mat_Grafo, Num_Nodos = ReEnumerarEstruct(Mat_Grafo)
+    Relaciones = GenerarMatrizRelaciones(Mat_Grafo,Num_Nodos)
+    Recorrido_Dij = Algoritmos.Dijkstra_Algorithm(Relaciones,1,11)
+    Recorrido_Manhattan = Algoritmos.Manhattan_Euristic_Algorithm(Relaciones,Mat_Grafo,1,11)
+    Recorrido_Cart = Algoritmos.Transformacion_Cartesiana(Recorrido_Dij,Mat_Grafo)
+    print(Recorrido_Dij)
+    print(Recorrido_Manhattan)
+    return Recorrido_Cart
+'''
+########################################################################################################################################
+Rutina para auxiliar la funcion del grafo para asi completar los nodos 
+########################################################################################################################################
+'''
+def Auxiliar_Grafo(Matriz_Map, Nodo):
+    
+    for i in range(20):
+        for j in range(20):
+            #Se encontro un nodo
+            if(Matriz_Map[i][j] != 0 and Matriz_Map[i][j] != -1):
+                #Evaluar los alrededores verticales hacia la Derecha
+                if(Matriz_Map[i][j-1] == -1):
+                    Contador = j
+                    while(Matriz_Map[i][Contador] != -1):
+                        if(Matriz_Map[i][Contador+1] == -1):
+                            Matriz_Map[i][Contador] = Nodo
+                            Nodo += 1
+                            
+                        Contador += 1
+                #Evaluar los alrededores verticales hacia la Izquierda
+                if(Matriz_Map[i][j+1] == -1):
+                    Contador = j
+                    while(Matriz_Map[i][Contador] != -1):
+                        if(Matriz_Map[i][Contador-1] == -1):
+                            Matriz_Map[i][Contador] = Nodo
+                            Nodo += 1
+                            
+                        Contador -= 1  
+                #Evaluar los alrededores horizontales hacia arriba
+                if(Matriz_Map[i-1][j] == -1):
+                    Contador = i
+                    while(Matriz_Map[Contador][j] != -1):
+                        if(Matriz_Map[Contador+1][j] == -1):
+                            Matriz_Map[Contador][j] = Nodo
+                            Nodo += 1
+                            
+                        Contador += 1  
+                #Evaluar los alrededores horizontales hacia abajo
+                if(Matriz_Map[i+1][j] == -1):
+                    Contador = i
+                    while(Matriz_Map[Contador][j] != -1):
+                        if(Matriz_Map[Contador-1][j] == -1):
+                            Matriz_Map[Contador][j] = Nodo
+                            Nodo += 1
+                            
+                        Contador -= 1 
+    return Matriz_Map 
 
+
+def ReEnumerarEstruct(Matriz_Map):
+    Incializar_Num = 1
+    for i in range(20):
+        for j in range(20):
+            if(Matriz_Map[i][j] != -1 and Matriz_Map[i][j] != 0):
+                Matriz_Map[i][j] = Incializar_Num
+                Incializar_Num += 1	
+    return Matriz_Map, Incializar_Num
+
+
+def GenerarMatrizRelaciones(Matriz_Map, NumNodos):
+    #Inicializar matriz de relaciones
+    Relaciones = np.empty((NumNodos,NumNodos),int)
+    for i in range(NumNodos):
+        for j in range(NumNodos):
+            Relaciones[i][j] = 0
+    #Comprobacion por si se genera mal la matriz del mapa
+    if(NumNodos >= 100):
+        print("REINICIAR PROGRAMA, OCURRIO UN ERROR EN LA GENERACION")
+        print("No existen " + str(NumNodos) + " nodos")
+        sys.exit()
+    #Recorrer matriz de mapa para encontrar nodos de forma horizontal
+    for i in range(20):
+        Ori_Encontrado = False
+        Contador = 0
+        Nodo_1 = 0
+        Nodo_2 = 0
+        for j in range(20):
+            if(Matriz_Map[i][j] > 0 and Ori_Encontrado == False):
+                Nodo_1 = Matriz_Map[i][j]
+                Ori_Encontrado = True
+                Contador = 0 #Reiniciar contador para poder ver las cargas entre nodos
+            if(Matriz_Map[i][j] > 0 and Ori_Encontrado == True and Matriz_Map[i][j] != Nodo_1):
+                Nodo_2 = Matriz_Map[i][j]
+                Relaciones[Nodo_1-1][Nodo_2-1] = Contador
+                Relaciones[Nodo_2-1][Nodo_1-1] = Contador
+                Nodo_1 = Nodo_2
+            if(Matriz_Map[i][j] == -1):
+                Nodo_1 = 0
+                Nodo_2 = 0
+                Ori_Encontrado == False
+            Contador += 1
+    #Recorrer la matriz de mapa para encontrar nodos de forma vertical
+    for i in range(20):
+        Ori_Encontrado = False
+        Contador = 0
+        Nodo_1 = 0
+        Nodo_2 = 0
+        for j in range(20):
+            if(Matriz_Map[j][i] > 0 and Ori_Encontrado == False):
+                Nodo_1 = Matriz_Map[j][i]
+                Ori_Encontrado = True
+                Contador = 0 #Reiniciar contador para poder ver las cargas entre nodos
+            if(Matriz_Map[j][i] > 0 and Ori_Encontrado == True and Matriz_Map[j][i]!= Nodo_1):
+                Nodo_2 = Matriz_Map[j][i]
+                Relaciones[Nodo_1-1][Nodo_2-1] = Contador
+                Relaciones[Nodo_2-1][Nodo_1-1] = Contador
+                Nodo_1 = Nodo_2
+            if(Matriz_Map[j][i] == -1):
+                Nodo_1 = 0
+                Nodo_2 = 0
+                Ori_Encontrado == False
+            Contador += 1
+    return Relaciones        
+                
+
+    
