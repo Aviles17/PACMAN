@@ -135,3 +135,4 @@ if(Modo_Juego == 'd' or Modo_Juego == 'm'):
         print("CANTIDAD DE NODOS VISITADOS :" + str(len(Recorrido_Cart)))
         print("TIEMPO EN RECORRIDO : " + str(Finish_time - Start_time))
         print("TIEMPO EN CALCULAR RECORRIDO : " + str(Tiempo_Calc_AI))
+        print("/n")
